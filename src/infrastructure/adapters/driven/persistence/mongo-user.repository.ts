@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../../../core/ports/user.repository";
 import { User } from "../../../../core/domain/user";
-import { UserModel } from "./user.model";
+import { UserModel, IUserDocument } from "./user.model"; // Import IUserDocument here
 import { OrganizationModel } from "./organization.model";
 import mongoose from "mongoose";
 
@@ -8,7 +8,7 @@ export class MongoUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const userDoc = await UserModel.findOne({ email }).lean();
     if (!userDoc) return null;
-    // Note: Manually mapping to the domain entity
+
     return {
       id: userDoc._id.toString(),
       name: userDoc.name,
@@ -24,9 +24,11 @@ export class MongoUserRepository implements IUserRepository {
     userDetails: Omit<User, "id" | "createdAt">,
     orgName: string
   ): Promise<User> {
-    let createdUserDoc;
+    // Explicitly declare the type of createdUserDoc
+    let createdUserDoc: IUserDocument;
     const session = await mongoose.startSession();
     session.startTransaction();
+
     try {
       const org = new OrganizationModel({ name: orgName });
       const savedOrg = await org.save({ session });
@@ -43,6 +45,10 @@ export class MongoUserRepository implements IUserRepository {
       throw error;
     } finally {
       session.endSession();
+    }
+
+    if (!createdUserDoc) {
+      throw new Error("User creation failed.");
     }
 
     return {
