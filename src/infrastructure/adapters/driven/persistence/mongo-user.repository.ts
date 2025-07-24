@@ -20,6 +20,20 @@ export class MongoUserRepository implements IUserRepository {
     };
   }
 
+  async findById(id: string): Promise<User | null> {
+    const userDoc = await UserModel.findById(id).lean();
+    if (!userDoc) return null;
+    return {
+      id: userDoc._id.toString(),
+      name: userDoc.name,
+      email: userDoc.email,
+      passwordHash: userDoc.passwordHash,
+      organizationId: userDoc.organizationId.toString(),
+      roles: userDoc.roles as any,
+      createdAt: userDoc.createdAt,
+    };
+  }
+
   async createWithOrganization(
     userDetails: Omit<User, "id" | "createdAt">,
     orgName: string

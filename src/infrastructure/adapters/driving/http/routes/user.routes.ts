@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller";
+import {
+  getProfile,
+  loginUser,
+  registerUser,
+} from "../controllers/user.controller";
+import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
@@ -59,6 +64,82 @@ const router = Router();
  *         description: Bad request, such as user with this email already exists
  */
 router.post("/register", registerUser);
+
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "password123"
+ *     responses:
+ *       '200':
+ *         description: Login successful, returns JWT token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT access token
+ *       '401':
+ *         description: Invalid credentials
+ */
+router.post("/login", loginUser);
+
+// Protected route
+
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: Get the current user's profile
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: The user's profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 organizationId:
+ *                   type: string
+ *                 roles:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *       '401':
+ *         description: Unauthorized
+ */
+router.get("/me", authMiddleware, getProfile);
+
 export default router;
 
 /**
