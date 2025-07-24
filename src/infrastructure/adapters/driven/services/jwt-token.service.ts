@@ -1,10 +1,7 @@
-// src/infrastructure/driven/services/jwt-token.service.ts
-
 import jwt from "jsonwebtoken";
 import { ITokenService } from "../../../../core/ports/token.service";
 import { User } from "../../../../core/domain/user";
 
-// Ensure you have a JWT_SECRET in your .env file
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
@@ -19,6 +16,6 @@ export class JwtTokenService implements ITokenService {
       roles: user.roles,
       organizationId: user.organizationId,
     };
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }); // Token expires in 1 hour
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
   }
 }
