@@ -6,6 +6,8 @@ export interface IUserDocument extends Document {
   passwordHash: string;
   organizationId: Schema.Types.ObjectId;
   roles: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema<IUserDocument>(
