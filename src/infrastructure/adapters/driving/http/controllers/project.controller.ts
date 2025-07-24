@@ -7,12 +7,14 @@ const projectRepository = new MongoProjectRepository();
 const createProjectUseCase = new CreateProjectUseCase(projectRepository);
 
 export const createProject = async (
-  req: AuthenticatedRequest,
+  req: import("express").Request,
   res: Response
 ) => {
+  // Cast req to AuthenticatedRequest to access user property
+  const authReq = req as import("../middleware/types").AuthenticatedRequest;
   try {
     const { name, description } = req.body;
-    const organizationId = req.user?.organizationId; // Get org ID from the user's token
+    const organizationId = authReq.user?.organizationId; // Get org ID from the user's token
 
     if (!organizationId) {
       return res

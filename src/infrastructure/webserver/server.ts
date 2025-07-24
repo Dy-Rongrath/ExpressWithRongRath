@@ -3,11 +3,17 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "../config/swagger";
 import userRoutes from "../adapters/driving/http/routes/user.routes";
 import projectRoutes from "../adapters/driving/http/routes/project.routes";
+import passport from "passport";
+import { configurePassport } from "../config/passport";
 
 const app: Application = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Initialize Passport
+app.use(passport.initialize());
+configurePassport();
 
 // --- Swagger UI Setup ---
 // Serve Swagger docs at /api-docs

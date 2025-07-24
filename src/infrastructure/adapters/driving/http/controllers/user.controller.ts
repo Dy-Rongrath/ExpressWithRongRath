@@ -29,9 +29,10 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
-  // The user ID is available from the authMiddleware
-  const userId = req.user?.id;
+export const getProfile = async (req: Request, res: Response) => {
+  // Cast req to AuthenticatedRequest to access user property
+  const authReq = req as import("../middleware/types").AuthenticatedRequest;
+  const userId = authReq.user?.id;
 
   if (!userId) {
     return res.status(400).json({ message: "User ID not found in token." });

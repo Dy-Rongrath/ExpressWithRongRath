@@ -5,6 +5,8 @@ import {
   registerUser,
 } from "../controllers/user.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
+import passport from "passport";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -155,6 +157,37 @@ router.post("/login", loginUser);
  *         description: Unauthorized
  */
 router.get("/me", authMiddleware, getProfile);
+
+// --- Google OAuth Routes ---
+
+// 1. Route to start the Google authentication flow
+router.get("/auth/google", passport.authenticate("google"));
+
+// 2. Google's callback route
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/login-failed",
+  }),
+  (req, res) => {
+    // At this point, `req.user` is populated by Passport's verify callback
+    const user = req.user as User;
+
+    // We have the user, so we can generate our own JWT
+    const jwtSecret = process.env.JWT_SECRET!;
+    const token = jwt.sign(
+      { id: user.id, email: user.email, roles: user.roles },
+      jwtSecret,
+      { expiresIn: "1h" }
+    );
+
+    // Send the token back to the client
+    // In a real app, you'd redirect to your frontend with the token:
+    // res.redirect(`https://yourapp.com/dashboard?token=${token}`);
+    res.status(200).json({ token });
+  }
+);
 
 export default router;
 
