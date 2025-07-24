@@ -28,7 +28,7 @@ export class LoginUserUseCase {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, roles: user.roles },
+      { id: user.id, email: user.email, roles: user.roles, organizationId: user.organizationId },
       jwtSecret,
       { expiresIn: "1h" } // Token expires in 1 hour
     );

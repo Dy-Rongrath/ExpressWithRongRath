@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../../../core/ports/user.repository";
 import { User } from "../../../../core/domain/user";
-import { UserModel, IUserDocument } from "./user.model"; // Import IUserDocument here
+import { UserModel, IUserDocument } from "./user.model";
 import { OrganizationModel } from "./organization.model";
 import mongoose from "mongoose";
 

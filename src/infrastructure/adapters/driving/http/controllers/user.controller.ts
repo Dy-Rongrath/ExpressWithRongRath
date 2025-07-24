@@ -7,7 +7,7 @@ import { AuthenticatedRequest } from "../middleware/types";
 // Instantiate repository and use cases
 const userRepository = new MongoUserRepository();
 const registerUserUseCase = new RegisterUserUseCase(userRepository);
-const loginUserUseCase = new LoginUserUseCase(userRepository); // <-- Add this line
+const loginUserUseCase = new LoginUserUseCase(userRepository);
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -22,7 +22,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { token } = await loginUserUseCase.execute(req.body); // <-- Use the instance
+    const { token } = await loginUserUseCase.execute(req.body);
     res.status(200).json({ token });
   } catch (error: any) {
     res.status(401).json({ message: error.message });

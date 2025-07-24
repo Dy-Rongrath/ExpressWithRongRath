@@ -27,6 +27,7 @@ export const authMiddleware = (
       id: decoded.id,
       email: decoded.email,
       roles: decoded.roles,
+      organizationId: decoded.organizationId,
     };
     next();
   } catch (error) {

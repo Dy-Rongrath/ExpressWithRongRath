@@ -18,6 +18,15 @@ const options: swaggerJsdoc.Options = {
         description: "API Server",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   // Paths to files containing OpenAPI definitions
   apis: ["./src/infrastructure/adapters/driving/http/routes/*.ts"],

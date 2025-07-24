@@ -40,6 +40,14 @@ const router = Router();
  *               organizationName:
  *                 type: string
  *                 example: "Doe Incorporated"
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Bearer token for authentication
  *     responses:
  *       '201':
  *         description: User and organization created successfully
@@ -115,6 +123,9 @@ router.post("/login", loginUser);
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     description: |
+ *       **Note:** You must include an Authorization header with a valid Bearer token.
+ *       Example: `Authorization: Bearer <your_token>`
  *     responses:
  *       '200':
  *         description: The user's profile
