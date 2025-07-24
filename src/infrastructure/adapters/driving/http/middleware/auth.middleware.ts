@@ -25,9 +25,12 @@ export const authMiddleware = (
     const decoded = jwt.verify(token, jwtSecret) as any;
     req.user = {
       id: decoded.id,
+      name: decoded.name ?? "",
       email: decoded.email,
-      roles: decoded.roles,
+      passwordHash: decoded.passwordHash ?? "",
       organizationId: decoded.organizationId,
+      roles: decoded.roles,
+      createdAt: decoded.createdAt ? new Date(decoded.createdAt) : new Date(),
     };
     next();
   } catch (error) {

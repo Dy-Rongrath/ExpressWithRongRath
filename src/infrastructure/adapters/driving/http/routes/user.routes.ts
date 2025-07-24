@@ -1,4 +1,5 @@
 import { Router } from "express";
+import type { User as AppUser } from "../../../../../core/domain/user";
 import {
   getProfile,
   loginUser,
@@ -172,7 +173,7 @@ router.get(
   }),
   (req, res) => {
     // At this point, `req.user` is populated by Passport's verify callback
-    const user = req.user as User;
+    const user = req.user as AppUser;
 
     // We have the user, so we can generate our own JWT
     const jwtSecret = process.env.JWT_SECRET!;

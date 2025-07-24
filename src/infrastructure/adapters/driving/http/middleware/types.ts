@@ -1,10 +1,6 @@
 import { Request } from "express";
+import type { User as AppUser } from "../../../../../core/domain/user";
 
 export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    roles: string[];
-    organizationId?: string;
-  };
+  user?: AppUser & Express.User;
 }

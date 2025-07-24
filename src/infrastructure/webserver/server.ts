@@ -4,16 +4,18 @@ import swaggerSpec from "../config/swagger";
 import userRoutes from "../adapters/driving/http/routes/user.routes";
 import projectRoutes from "../adapters/driving/http/routes/project.routes";
 import passport from "passport";
-import { configurePassport } from "../config/passport";
+import "../config/passport-setup"; // Import to execute the passport config
+import authRoutes from "../adapters/driving/http/routes/auth.routes";
 
 const app: Application = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+app.use(passport.initialize());
+
 // Initialize Passport
 app.use(passport.initialize());
-configurePassport();
 
 // --- Swagger UI Setup ---
 // Serve Swagger docs at /api-docs
@@ -27,5 +29,7 @@ app.get("/api/v1/health", (req: Request, res: Response) => {
 // Use user routes
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/projects", projectRoutes);
+
+app.use("/api/v1/auth", authRoutes);
 
 export default app;
