@@ -124,8 +124,13 @@ router.post("/login", loginUser);
  *     security:
  *       - bearerAuth: []
  *     description: |
- *       **Note:** You must include an Authorization header with a valid Bearer token.
- *       Example: `Authorization: Bearer <your_token>`
+ *       **How to use this endpoint in Swagger UI:**
+ *       1. Log in using the `/users/login` endpoint and copy the `token` value from the response.
+ *       2. Click the green **Authorize** button at the top right of Swagger UI.
+ *       3. In the popup, paste your token in this format (including the word `Bearer` and a space):
+ *          `Bearer <your_copied_token>`
+ *       4. Click **Authorize** and then **Close**.
+ *       5. Now, when you execute the `/users/me` request, Swagger will automatically include the Authorization header and you will get your profile.
  *     responses:
  *       '200':
  *         description: The user's profile
