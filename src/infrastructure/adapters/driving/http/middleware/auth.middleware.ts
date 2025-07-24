@@ -1,10 +1,17 @@
 // src/infrastructure/adapters/driving/http/middleware/auth.middleware.ts
-import { Response, NextFunction } from "express";
+
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { AuthenticatedRequest } from "./types";
+import { JwtPayload } from "../../../../../types/express"; // Import our custom payload type
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("FATAL ERROR: JWT_SECRET is not defined.");
+}
 
 export const authMiddleware = (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,23 +22,11 @@ export const authMiddleware = (
   }
 
   const token = authHeader.split(" ")[1];
-  const jwtSecret = process.env.JWT_SECRET;
-
-  if (!jwtSecret) {
-    throw new Error("Server configuration error: JWT secret is not defined.");
-  }
 
   try {
-    const decoded = jwt.verify(token, jwtSecret) as any;
-    req.user = {
-      id: decoded.id,
-      name: decoded.name ?? "",
-      email: decoded.email,
-      passwordHash: decoded.passwordHash ?? "",
-      organizationId: decoded.organizationId,
-      roles: decoded.roles,
-      createdAt: decoded.createdAt ? new Date(decoded.createdAt) : new Date(),
-    };
+    // Verify the token and attach its payload to the request object
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    req.user = decoded; // The user property is now correctly typed
     next();
   } catch (error) {
     return res.status(401).json({ message: "Invalid or expired token." });
